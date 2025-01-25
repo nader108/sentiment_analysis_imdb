@@ -6,8 +6,6 @@ scipy
 scikit-learn
 streamlit
 nltk
-punkt
 tensorflow
-
 
 
