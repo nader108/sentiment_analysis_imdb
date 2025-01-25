@@ -14,6 +14,7 @@ import string
 import pickle as pkl
 
 # Ensure NLTK data is downloaded
+nltk.download('all')
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
