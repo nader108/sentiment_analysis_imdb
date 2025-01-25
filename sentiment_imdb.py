@@ -13,10 +13,10 @@ import string
 import pickle as pkl
 
 # Load the pre-trained model
-model = load_model('C:/Users/PC/imdb/model_imdb.keras')
+model = load_model("model_imdb.keras")
 
 # Load the tokenizer used during training
-with open('C:/Users/PC/imdb/tokenizer.pkl', 'rb') as handle:
+with open("tokenizer.pkl', 'rb") as handle:
     tokenizer = pkl.load(handle)
 
 # Download required NLTK data
