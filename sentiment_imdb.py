@@ -25,95 +25,49 @@ try:
 except Exception as e:
     st.error(f"Error loading the model: {e}")
 
-# Load the tokenizer used during training
+# Load tokenizer
 try:
     with open("tokenizer.pkl", "rb") as handle:
         tokenizer = pkl.load(handle)
 except FileNotFoundError:
-    st.error("Tokenizer file 'tokenizer.pkl' not found. Please ensure it is uploaded.")
-
-# Initialize NLTK tools
-stop_words = set(stopwords.words('english'))
-lemmatizer = WordNetLemmatizer()
-
-
-# Text preprocessing functions
-def remove_special_chars(text):
-    re1 = re.compile(r'  +')
-    x1 = text.lower().replace('#39;', "'").replace('amp;', '&').replace('#146;', "'").replace(
-        'nbsp;', ' ').replace('#36;', '$').replace('\\n', "\n").replace('quot;', "'").replace(
-        '<br />', "\n").replace('\\"', '"').replace('<unk>', 'u_n').replace(' @.@ ', '.').replace(
-        ' @-@ ', '-').replace('\\', ' \\ ')
-    return re1.sub(' ', html.unescape(x1))
-
-
-def remove_non_ascii(text):
-    return unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8', 'ignore')
-
-
-def to_lowercase(text):
-    return text.lower()
-
-
-def remove_punctuation(text):
-    translator = str.maketrans('', '', string.punctuation)
-    return text.translate(translator)
-
-
-def replace_numbers(text):
-    return re.sub(r'\d+', '', text)
-
-
-def remove_stopwords(words):
-    return [word for word in words if word not in stop_words]
-
-
-def lemmatize_words(words):
-    return [lemmatizer.lemmatize(word) for word in words]
-
-
-def text2words(text):
-    return word_tokenize(text)
-
-
-def normalize_text(text):
-    text = remove_special_chars(text)
-    text = remove_non_ascii(text)
-    text = remove_punctuation(text)
-    text = to_lowercase(text)
-    text = replace_numbers(text)
-    words = text2words(text)
-    words = remove_stopwords(words)
-    words = lemmatize_words(words)
-    return ' '.join(words)
-
+    st.error("Tokenizer file not found. Please check its path.")
+    tokenizer = None
 
 # Streamlit app
 st.title("IMDB Sentiment Analysis")
 
-# User input
 test_review = st.text_input("Enter a review:")
 
 if st.button("Predict"):
-    if test_review:
+    if not model or not tokenizer:
+        st.error("Model or tokenizer is not loaded properly.")
+    elif test_review.strip() == "":
+        st.warning("Please enter a review.")
+    else:
         try:
-            # Preprocess the input text
-            processed_text = normalize_text(test_review)
+            # Preprocessing input
+            def preprocess_text(text):
+                st.write(f"Original Text: {text}")
+                # Tokenization and lowercasing
+                tokens = word_tokenize(text.lower())
+                st.write(f"Tokenized Text: {tokens}")
+                return ' '.join(tokens)
 
-            # Convert text to sequence
+            processed_text = preprocess_text(test_review)
+
+            # Convert text to sequences
             sequence = tokenizer.texts_to_sequences([processed_text])
+            st.write(f"Sequence: {sequence}")
 
             # Pad the sequence
-            max_length = 100  # Ensure this matches the max_length used during training
-            padded_sequence = pad_sequences(sequence, maxlen=max_length, padding='post')
+            padded_sequence = pad_sequences(sequence, maxlen=100, padding='post')
+            st.write(f"Padded Sequence: {padded_sequence}")
 
-            # Make prediction
+            # Predict sentiment
             prediction = model.predict(padded_sequence)
-            sentiment = "positive 😊" if prediction > 0.5 else "negative 😢"
+            st.write(f"Raw Prediction: {prediction}")
 
-            # Display result
+            sentiment = "positive 😊" if prediction > 0.5 else "negative 😢"
             st.write(f"Predicted sentiment: {sentiment}")
         except Exception as e:
-            st.error(f"Error during prediction: {e}")
-    else:
-        st.warning("Please enter a review to analyze.")
+            st.error(f"Error during prediction: {str(e)}")
