@@ -7,8 +7,6 @@ scikit-learn
 streamlit
 nltk
 tensorflow
-unicodedata
-string
-html
+
 
 
