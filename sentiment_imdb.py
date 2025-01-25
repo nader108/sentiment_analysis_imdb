@@ -2,6 +2,8 @@ import streamlit as st
 import re
 import nltk
 from nltk.corpus import stopwords
+import tensorflow as tf
+import keras
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from nltk.tokenize import word_tokenize
@@ -18,7 +20,7 @@ nltk.download('wordnet')
 
 # Load the trained model
 try:
-    model = load_model("model_imdb.keras")
+    model = tf.keras.models.load_model("model_imdb.keras")
 except Exception as e:
     st.error(f"Error loading the model: {e}")
 
