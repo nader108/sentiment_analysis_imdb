@@ -21,7 +21,7 @@ nltk.download('wordnet')
 
 # Load model
 try:
-    model = load_model("model_imdb.keras")
+    model = load_model("best_model.keras")
     st.write("Model loaded successfully.")
 except Exception as e:
     st.error(f"Error loading the model: {str(e)}")
