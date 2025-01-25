@@ -4,7 +4,6 @@ import nltk
 from nltk.corpus import stopwords
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.preprocessing.text import Tokenizer
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 import html
@@ -12,18 +11,25 @@ import unicodedata
 import string
 import pickle as pkl
 
-
-model = load_model("model_imdb.keras")
-
-# Load the tokenizer used during training
-with open("tokenizer.pkl", "rb") as handle:
-    tokenizer = pkl.load(handle)
-
-
+# Ensure NLTK data is downloaded
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
+# Load the trained model
+try:
+    model = load_model("model_imdb.keras")
+except Exception as e:
+    st.error(f"Error loading the model: {e}")
+
+# Load the tokenizer used during training
+try:
+    with open("tokenizer.pkl", "rb") as handle:
+        tokenizer = pkl.load(handle)
+except FileNotFoundError:
+    st.error("Tokenizer file 'tokenizer.pkl' not found. Please ensure it is uploaded.")
+
+# Initialize NLTK tools
 stop_words = set(stopwords.words('english'))
 lemmatizer = WordNetLemmatizer()
 
@@ -53,10 +59,6 @@ def remove_punctuation(text):
 
 def replace_numbers(text):
     return re.sub(r'\d+', '', text)
-
-
-def remove_whitespaces(text):
-    return text.strip()
 
 
 def remove_stopwords(words):
@@ -91,21 +93,24 @@ test_review = st.text_input("Enter a review:")
 
 if st.button("Predict"):
     if test_review:
-        # Preprocess the input text
-        processed_text = normalize_text(test_review)
+        try:
+            # Preprocess the input text
+            processed_text = normalize_text(test_review)
 
-        # Convert text to sequence
-        sequence = tokenizer.texts_to_sequences([processed_text])
+            # Convert text to sequence
+            sequence = tokenizer.texts_to_sequences([processed_text])
 
-        # Pad the sequence
-        max_length = 100  # Ensure this matches the max_length used during training
-        padded_sequence = pad_sequences(sequence, maxlen=max_length, padding='post')
+            # Pad the sequence
+            max_length = 100  # Ensure this matches the max_length used during training
+            padded_sequence = pad_sequences(sequence, maxlen=max_length, padding='post')
 
-        # Make prediction
-        prediction = model.predict(padded_sequence)
-        sentiment = "positive 😊" if prediction > 0.5 else "negative 😢"
+            # Make prediction
+            prediction = model.predict(padded_sequence)
+            sentiment = "positive 😊" if prediction > 0.5 else "negative 😢"
 
-        # Display result
-        st.write(f"Predicted sentiment: {sentiment}")
+            # Display result
+            st.write(f"Predicted sentiment: {sentiment}")
+        except Exception as e:
+            st.error(f"Error during prediction: {e}")
     else:
         st.warning("Please enter a review to analyze.")
