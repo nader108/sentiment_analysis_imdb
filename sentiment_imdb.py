@@ -19,18 +19,24 @@ nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
-# Load the trained model
+# Load model
 try:
-    model = tf.keras.models.load_model("model_imdb.keras")
+    model = load_model("model_imdb.keras")
+    st.write("Model loaded successfully.")
 except Exception as e:
-    st.error(f"Error loading the model: {e}")
+    st.error(f"Error loading the model: {str(e)}")
+    model = None
 
 # Load tokenizer
 try:
     with open("tokenizer.pkl", "rb") as handle:
         tokenizer = pkl.load(handle)
+    st.write("Tokenizer loaded successfully.")
 except FileNotFoundError:
     st.error("Tokenizer file not found. Please check its path.")
+    tokenizer = None
+except Exception as e:
+    st.error(f"Error loading tokenizer: {str(e)}")
     tokenizer = None
 
 # Streamlit app
