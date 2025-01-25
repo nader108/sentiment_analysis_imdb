@@ -63,15 +63,15 @@ if st.button("Predict"):
 
             # Convert text to sequences
             sequence = tokenizer.texts_to_sequences([processed_text])
-            st.write(f"Sequence: {sequence}")
+          #  st.write(f"Sequence: {sequence}")
 
             # Pad the sequence
             padded_sequence = pad_sequences(sequence, maxlen=100, padding='post')
-            st.write(f"Padded Sequence: {padded_sequence}")
+           # st.write(f"Padded Sequence: {padded_sequence}")
 
             # Predict sentiment
             prediction = model.predict(padded_sequence)
-            st.write(f"Raw Prediction: {prediction}")
+           # st.write(f"Raw Prediction: {prediction}")
 
             sentiment = "positive 😊" if prediction > 0.5 else "negative 😢"
             st.write(f"Predicted sentiment: {sentiment}")
