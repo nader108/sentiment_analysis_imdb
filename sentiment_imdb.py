@@ -53,10 +53,10 @@ if st.button("Predict"):
         try:
             # Preprocessing input
             def preprocess_text(text):
-                st.write(f"Original Text: {text}")
+              #  st.write(f"Original Text: {text}")
                 # Tokenization and lowercasing
                 tokens = word_tokenize(text.lower())
-                st.write(f"Tokenized Text: {tokens}")
+               # st.write(f"Tokenized Text: {tokens}")
                 return ' '.join(tokens)
 
             processed_text = preprocess_text(test_review)
