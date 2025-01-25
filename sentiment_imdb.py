@@ -12,14 +12,14 @@ import unicodedata
 import string
 import pickle as pkl
 
-# Load the pre-trained model
+
 model = load_model("model_imdb.keras")
 
 # Load the tokenizer used during training
 with open("tokenizer.pkl", "rb") as handle:
     tokenizer = pkl.load(handle)
 
-# Download required NLTK data
+
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
