@@ -16,7 +16,7 @@ import pickle as pkl
 model = load_model("model_imdb.keras")
 
 # Load the tokenizer used during training
-with open("tokenizer.pkl', 'rb") as handle:
+with open("tokenizer.pkl", "rb") as handle:
     tokenizer = pkl.load(handle)
 
 # Download required NLTK data
