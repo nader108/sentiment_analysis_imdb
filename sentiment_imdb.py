@@ -31,12 +31,12 @@ except Exception as e:
 try:
     with open("tokenizer.pkl", "rb") as handle:
         tokenizer = pkl.load(handle)
-    st.write("Tokenizer loaded successfully.")
+    #st.write("Tokenizer loaded successfully.")
 except FileNotFoundError:
-    st.error("Tokenizer file not found. Please check its path.")
+    #st.error("Tokenizer file not found. Please check its path.")
     tokenizer = None
 except Exception as e:
-    st.error(f"Error loading tokenizer: {str(e)}")
+   # st.error(f"Error loading tokenizer: {str(e)}")
     tokenizer = None
 
 # Streamlit app
