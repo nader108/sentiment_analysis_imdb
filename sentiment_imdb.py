@@ -22,9 +22,9 @@ nltk.download('wordnet')
 # Load model
 try:
     model = load_model("best_model.keras")
-    st.write("Model loaded successfully.")
+   # st.write("Model loaded successfully.")
 except Exception as e:
-    st.error(f"Error loading the model: {str(e)}")
+  #  st.error(f"Error loading the model: {str(e)}")
     model = None
 
 # Load tokenizer
